@@ -2,7 +2,8 @@ pub extern crate common;
 extern crate openssl;
 extern crate rmp_serde;
 
-mod error;
+pub mod error;
+pub mod state;
 
 use openssl::ssl::{SSL_VERIFY_PEER, SslConnectorBuilder, SslMethod, SslStream};
 use openssl::x509::X509StoreContextRef;
