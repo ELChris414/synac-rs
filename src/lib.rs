@@ -58,4 +58,9 @@ impl Session {
     pub fn send(&mut self, packet: &common::Packet) -> Result<(), error::Error> {
         Ok(common::write(&mut self.conn, packet)?)
     }
+
+    /// Read a packet from the connection
+    pub fn read(&mut self) -> Result<common::Packet, error::Error> {
+        Ok(common::read(&mut self.conn)?)
+    }
 }
