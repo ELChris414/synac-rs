@@ -1,7 +1,6 @@
-extern crate common;
+pub extern crate common;
 extern crate openssl;
-
-pub use common::*;
+extern crate rmp_serde;
 
 mod error;
 
@@ -11,12 +10,12 @@ use std::any::Any;
 use std::net::{TcpStream, ToSocketAddrs};
 
 /// A struct that holds the connection to synac.
-pub struct Synac {
+pub struct Session {
     pub conn: SslStream<TcpStream>
 }
 
 /// Create a synac session that verifies the public key against a hash.
-pub fn new<T: ToSocketAddrs>(addr: T, hash: String) -> Result<Synac, error::Error> {
+pub fn new<T: ToSocketAddrs>(addr: T, hash: String) -> Result<Session, error::Error> {
     new_with_verify_callback(addr, move |_, cert| {
         if let Some(cert) = cert.current_cert() {
             if let Ok(pkey) = cert.public_key() {
@@ -36,7 +35,7 @@ pub fn new<T: ToSocketAddrs>(addr: T, hash: String) -> Result<Synac, error::Erro
 }
 /// Create a synac session with a custom SSL callback.
 pub fn new_with_verify_callback<T, F>(addr: T, callback: F)
-    -> Result<Synac, error::Error>
+    -> Result<Session, error::Error>
     where
         T: ToSocketAddrs,
         F: Fn(bool, &X509StoreContextRef) -> bool + Any + 'static + Sync + Send
@@ -49,7 +48,14 @@ pub fn new_with_verify_callback<T, F>(addr: T, callback: F)
     let stream =
 connector.danger_connect_without_providing_domain_for_certificate_verification_and_server_name_indication(stream)?;
 
-    Ok(Synac {
+    Ok(Session {
         conn: stream
     })
+}
+
+impl Session {
+    /// Transmit a message over the connection
+    pub fn send(&mut self, packet: &common::Packet) -> Result<(), error::Error> {
+        Ok(common::write(&mut self.conn, packet)?)
+    }
 }
