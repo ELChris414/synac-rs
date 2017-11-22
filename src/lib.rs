@@ -27,7 +27,7 @@ pub fn new<T: ToSocketAddrs>(addr: T, hash: String) -> Result<Session, Error> {
                     let digest = openssl::sha::sha256(&pem);
                     let mut digest_string = String::with_capacity(digest.len());
                     for byte in &digest {
-                        digest_string.push_str(&format!("{:0X}", byte));
+                        digest_string.push_str(&format!("{:02X}", byte));
                     }
                     use std::ascii::AsciiExt;
                     return hash.trim().eq_ignore_ascii_case(&digest_string);
