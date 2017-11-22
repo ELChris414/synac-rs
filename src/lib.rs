@@ -3,8 +3,11 @@ extern crate openssl;
 extern crate rmp_serde;
 
 pub mod error;
+pub mod listener;
 pub mod state;
 
+use common::Packet;
+use error::Error;
 use openssl::ssl::{SSL_VERIFY_PEER, SslConnectorBuilder, SslMethod, SslStream};
 use openssl::x509::X509StoreContextRef;
 use std::any::Any;
@@ -16,7 +19,7 @@ pub struct Session {
 }
 
 /// Create a synac session that verifies the public key against a hash.
-pub fn new<T: ToSocketAddrs>(addr: T, hash: String) -> Result<Session, error::Error> {
+pub fn new<T: ToSocketAddrs>(addr: T, hash: String) -> Result<Session, Error> {
     new_with_verify_callback(addr, move |_, cert| {
         if let Some(cert) = cert.current_cert() {
             if let Ok(pkey) = cert.public_key() {
@@ -56,12 +59,12 @@ connector.danger_connect_without_providing_domain_for_certificate_verification_a
 
 impl Session {
     /// Transmit a message over the connection
-    pub fn send(&mut self, packet: &common::Packet) -> Result<(), error::Error> {
+    pub fn send(&mut self, packet: &Packet) -> Result<(), Error> {
         Ok(common::write(&mut self.conn, packet)?)
     }
 
     /// Read a packet from the connection
-    pub fn read(&mut self) -> Result<common::Packet, error::Error> {
+    pub fn read(&mut self) -> Result<Packet, Error> {
         Ok(common::read(&mut self.conn)?)
     }
 }
