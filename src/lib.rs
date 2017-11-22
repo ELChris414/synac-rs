@@ -15,7 +15,7 @@ use std::net::{TcpStream, ToSocketAddrs};
 
 /// A struct that holds the connection to synac.
 pub struct Session {
-    pub conn: SslStream<TcpStream>
+    conn: SslStream<TcpStream>
 }
 
 /// Create a synac session that verifies the public key against a hash.
@@ -58,6 +58,33 @@ connector.danger_connect_without_providing_domain_for_certificate_verification_a
 }
 
 impl Session {
+    /// Returns inner connection
+    pub fn inner_conn(&mut self) -> &mut SslStream<TcpStream> {
+        &mut self.conn
+    }
+
+    /// Sends the login packet with specific password.
+    /// Read the result with `read`.
+    /// Warning: Strongly disencouraged. Use tokens instead, when possible.
+    pub fn login_with_password(&mut self, bot: bool, name: String, password: String) -> Result<(), Error> {
+        self.send(&Packet::Login(common::Login {
+            bot: bot,
+            name: name,
+            password: Some(password),
+            token: None
+        }))
+    }
+    /// Sends the login packet with specific token.
+    /// Read the result with `read`.
+    pub fn login_with_token(&mut self, bot: bool, name: String, token: String) -> Result<(), Error> {
+        self.send(&Packet::Login(common::Login {
+            bot: bot,
+            name: name,
+            password: None,
+            token: Some(token)
+        }))
+    }
+
     /// Transmit a message over the connection
     pub fn send(&mut self, packet: &Packet) -> Result<(), Error> {
         Ok(common::write(&mut self.conn, packet)?)
