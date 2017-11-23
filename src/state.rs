@@ -10,7 +10,7 @@ pub struct State {
 
 impl State {
     /// Create new state
-    pub fn new() {
+    pub fn new() -> Self {
         State {
             channels: HashMap::new(),
             groups:   HashMap::new(),
@@ -36,10 +36,7 @@ impl State {
             },
             Packet::GroupReceive(ref event) => {
                 if event.new {
-                    let pos = if let Some(old) = self.groups.get(&event.inner.id) {
-                        Some(old.pos)
-                    } else { None };
-                    if let Some(pos) = pos {
+                    if let Some(pos) = self.groups.get(&event.inner.id).map(|old| old.pos) {
                         if event.inner.pos > pos {
                             for group in self.groups.values_mut() {
                                 if group.pos > pos && group.pos <= event.inner.pos {
