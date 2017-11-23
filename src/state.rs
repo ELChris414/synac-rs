@@ -9,6 +9,14 @@ pub struct State {
 }
 
 impl State {
+    /// Create new state
+    pub fn new() {
+        State {
+            channels: HashMap::new(),
+            groups:   HashMap::new(),
+            users:    HashMap::new()
+        }
+    }
     /// Update the state with `packet`
     pub fn update(&mut self, packet: &Packet) {
         match *packet {
