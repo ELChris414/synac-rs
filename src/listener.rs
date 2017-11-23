@@ -8,7 +8,7 @@ pub struct Listener {
     i:    usize
 }
 impl Listener {
-    /// Assuming `stream` is non blocking, `read` tries to read a packet.
+    /// Assuming `stream` is non blocking, `read` tries to read a packet, returning `None` if not possible.
     pub fn try_read<S: Read>(&mut self, stream: &mut S) -> Result<Option<Packet>, Error> {
         let read = stream.read(&mut self.buf[self.i..])?;
         if read == 0 {

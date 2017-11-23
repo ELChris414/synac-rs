@@ -85,7 +85,7 @@ impl Session {
         }))
     }
 
-    /// Transmit a message over the connection
+    /// Transmit a packet over the connection
     pub fn send(&mut self, packet: &Packet) -> Result<(), Error> {
         Ok(common::write(&mut self.stream, packet)?)
     }

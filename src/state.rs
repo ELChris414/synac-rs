@@ -9,6 +9,7 @@ pub struct State {
 }
 
 impl State {
+    /// Update the state with `packet`
     pub fn update(&mut self, packet: &Packet) {
         match *packet {
             Packet::ChannelDeleteReceive(ref event) => {
