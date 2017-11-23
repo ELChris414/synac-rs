@@ -5,9 +5,8 @@
 // And common doesn't deserve it's own repo.
 // --------------------------------------------------------------
 
-extern crate rmp_serde as rmps;
-#[macro_use] extern crate serde_derive;
-
+use std;
+use rmps;
 use std::collections::HashMap;
 use std::io;
 

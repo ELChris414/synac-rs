@@ -1,8 +1,8 @@
 use common::Error as CommonError;
 use openssl::error::ErrorStack as SslErrorStack;
 use openssl::ssl::HandshakeError as SslHandshakeError;
-use rmp_serde::decode::Error as DecodeError;
-use rmp_serde::encode::Error as EncodeError;
+use rmps::decode::Error as DecodeError;
+use rmps::encode::Error as EncodeError;
 use std::fmt;
 use std::io::Error as IoError;
 use std::net::TcpStream;

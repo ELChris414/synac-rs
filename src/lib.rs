@@ -1,7 +1,11 @@
-pub extern crate common;
 extern crate openssl;
-extern crate rmp_serde;
+extern crate rmp_serde as rmps;
 
+// Dependencies of common
+#[macro_use] extern crate serde_derive;
+// End
+
+pub mod common;
 pub mod error;
 pub mod listener;
 pub mod state;
