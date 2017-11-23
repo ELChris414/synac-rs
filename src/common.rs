@@ -349,12 +349,6 @@ pub fn read<T: io::Read>(reader: &mut T) -> Result<Packet, Error> {
 }
 pub fn write<T: io::Write>(writer: &mut T, packet: &Packet) -> Result<(), Error> {
     let buf = serialize(packet)?;
-    for byte in &buf {
-        for c in (*byte as char).escape_debug() {
-            eprint!("{}", c);
-        }
-    }
-    eprintln!();
     if buf.len() > std::u16::MAX as usize {
         return Err(Error::PacketTooBigError);
     }
