@@ -7,7 +7,20 @@ pub struct Listener {
     buf:  Vec<u8>,
     i:    usize
 }
+impl Default for Listener {
+    fn default() -> Self {
+        Listener {
+            size: true,
+            buf:  vec![0; 2],
+            i:    0
+        }
+    }
+}
 impl Listener {
+    /// Creates new Listener
+    pub fn new() -> Self {
+        Listener::default()
+    }
     /// Assuming `stream` is non blocking, `read` tries to read a packet, returning `None` if not possible.
     pub fn try_read<S: Read>(&mut self, stream: &mut S) -> Result<Option<Packet>, Error> {
         let read = stream.read(&mut self.buf[self.i..])?;

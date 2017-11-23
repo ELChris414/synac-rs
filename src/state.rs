@@ -8,14 +8,19 @@ pub struct State {
     pub users:    HashMap<usize, User>
 }
 
-impl State {
-    /// Create new state
-    pub fn new() -> Self {
+impl Default for State {
+    fn default() -> Self {
         State {
             channels: HashMap::new(),
             groups:   HashMap::new(),
             users:    HashMap::new()
         }
+    }
+}
+impl State {
+    /// Create new state
+    pub fn new() -> Self {
+        State::default()
     }
     /// Update the state with `packet`
     pub fn update(&mut self, packet: &Packet) {
