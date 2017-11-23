@@ -8,6 +8,9 @@ license-file = "LICENSE"
 repository = "https://github.com/jD91mZM2/synac-rs"
 
 [dependencies]
-common    = { git = "https://github.com/jD91mZM2/synac" }
 openssl   = "0.9"
 rmp-serde = "0.13"
+
+# All dependencies from common
+serde        = "1.0"
+serde_derive = "1.0"
