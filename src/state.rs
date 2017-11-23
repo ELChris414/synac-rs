@@ -27,9 +27,9 @@ impl State {
                 self.channels.insert(event.inner.id, event.inner.clone());
             },
             Packet::GroupDeleteReceive(ref event) => {
-                for attr in self.groups.values_mut() {
-                    if attr.pos > event.inner.pos {
-                        attr.pos -= 1;
+                for group in self.groups.values_mut() {
+                    if group.pos > event.inner.pos {
+                        group.pos -= 1;
                     }
                 }
                 self.groups.remove(&event.inner.id);
@@ -41,22 +41,22 @@ impl State {
                     } else { None };
                     if let Some(pos) = pos {
                         if event.inner.pos > pos {
-                            for attr in self.groups.values_mut() {
-                                if attr.pos > pos && attr.pos <= event.inner.pos {
-                                    attr.pos -= 1;
+                            for group in self.groups.values_mut() {
+                                if group.pos > pos && group.pos <= event.inner.pos {
+                                    group.pos -= 1;
                                 }
                             }
                         } else if event.inner.pos < pos {
-                            for attr in self.groups.values_mut() {
-                                if attr.pos >= event.inner.pos && attr.pos < pos {
-                                    attr.pos += 1;
+                            for group in self.groups.values_mut() {
+                                if group.pos >= event.inner.pos && group.pos < pos {
+                                    group.pos += 1;
                                 }
                             }
                         }
                     } else {
-                        for attr in self.groups.values_mut() {
-                            if attr.pos >= event.inner.pos {
-                                attr.pos += 1;
+                        for group in self.groups.values_mut() {
+                            if group.pos >= event.inner.pos {
+                                group.pos += 1;
                             }
                         }
                     }
