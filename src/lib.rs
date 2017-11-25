@@ -6,14 +6,15 @@ extern crate rmp_serde as rmps;
 // End
 
 pub mod common;
+pub mod encrypter;
 pub mod error;
 pub mod listener;
 pub mod state;
 
+pub use encrypter::*;
 pub use error::*;
 pub use listener::*;
 pub use state::*;
-
 
 use common::Packet;
 use error::Error;

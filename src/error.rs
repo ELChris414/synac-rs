@@ -12,8 +12,9 @@ use std::net::TcpStream;
 pub enum Error {
     DecodeError(DecodeError),
     EncodeError(EncodeError),
-    PacketTooBigError,
     IoError(IoError),
+    OutOfBounds,
+    PacketTooBigError,
     SslErrorStack(SslErrorStack),
     SslHandshakeError(SslHandshakeError<TcpStream>)
 }
@@ -23,6 +24,7 @@ impl ::std::error::Error for Error {
         match *self {
             Error::DecodeError(_)       => "Failed to decode MsgPack data",
             Error::EncodeError(_)       => "Failed to encode MsgPack data",
+            Error::OutOfBounds          => "Input is too small",
             Error::PacketTooBigError    => "Packet size must fit into an u16",
             Error::IoError(_)           => "An IO operation failed",
             Error::SslErrorStack(_)     => "An SSL operation failed",
@@ -36,6 +38,7 @@ impl fmt::Display for Error {
         match *self {
             Error::DecodeError(ref inner)       => write!(f, "DecodeError: {}", inner),
             Error::EncodeError(ref inner)       => write!(f, "EncodeError: {}", inner),
+            Error::OutOfBounds                  => write!(f, "{}", self.description()),
             Error::PacketTooBigError            => write!(f, "{}", self.description()),
             Error::IoError(ref inner)           => write!(f, "IoError: {}", inner),
             Error::SslErrorStack(ref inner)     => write!(f, "SslErrorStack: {}", inner),
