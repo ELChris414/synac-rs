@@ -17,7 +17,6 @@ pub use listener::*;
 pub use state::*;
 
 use common::Packet;
-use error::Error;
 use openssl::ssl::{SSL_VERIFY_PEER, SslConnectorBuilder, SslMethod, SslStream};
 use openssl::x509::X509StoreContextRef;
 use std::any::Any;
