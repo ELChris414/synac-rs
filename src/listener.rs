@@ -1,6 +1,6 @@
 use common::{self, Packet};
 use error::Error;
-use std::io::Read;
+use std::io::{ErrorKind as IoErrorKind, Read};
 
 pub struct Listener {
     size: bool,
@@ -23,7 +23,13 @@ impl Listener {
     }
     /// Assuming `stream` is non blocking, `read` tries to read a packet, returning `None` if not possible.
     pub fn try_read<S: Read>(&mut self, stream: &mut S) -> Result<Option<Packet>, Error> {
-        let read = stream.read(&mut self.buf[self.i..])?;
+        let read = match stream.read(&mut self.buf[self.i..]) {
+            Ok(read) => read,
+            Err(ref err)
+                if err.kind() == IoErrorKind::WouldBlock
+                => return Ok(None),
+            Err(err) => return Err(err.into())
+        };
         if read == 0 {
             return Ok(None);
         }

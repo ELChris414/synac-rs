@@ -74,6 +74,11 @@ connector.danger_connect_without_providing_domain_for_certificate_verification_a
         &mut self.stream
     }
 
+    /// Make inner stream non-blocking
+    pub fn set_nonblocking(&mut self, value: bool) -> Result<(), std::io::Error> {
+        self.stream.get_ref().set_nonblocking(value)
+    }
+
     /// Sends the login packet with specific password.
     /// Read the result with `read`.
     /// Warning: Strongly disencouraged. Use tokens instead, when possible.

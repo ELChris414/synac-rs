@@ -13,6 +13,8 @@ fn main() {
     let result = session.read().unwrap();
     // TODO: Use result
 
+    session.set_nonblocking(true).unwrap();
+
     let mut state = State::new();
     let mut listener = Listener::new();
 
