@@ -1,3 +1,6 @@
+extern crate failure;
+#[macro_use] extern crate failure_derive;
+
 extern crate openssl;
 extern crate rmp_serde as rmps;
 
@@ -7,16 +10,15 @@ extern crate rmp_serde as rmps;
 
 pub mod common;
 pub mod encrypter;
-pub mod error;
 pub mod listener;
 pub mod state;
 
 pub use encrypter::*;
-pub use error::*;
 pub use listener::*;
 pub use state::*;
 
 use common::Packet;
+use failure::Error;
 use openssl::ssl::{SSL_VERIFY_PEER, SslConnectorBuilder, SslMethod, SslStream};
 use openssl::x509::X509StoreContextRef;
 use std::any::Any;
@@ -50,7 +52,7 @@ impl Session {
     }
     /// Create a synac session with a custom SSL callback.
     pub fn new_with_verify_callback<T, F>(addr: T, callback: F)
-        -> Result<Session, error::Error>
+        -> Result<Session, Error>
         where
             T: ToSocketAddrs,
             F: Fn(bool, &X509StoreContextRef) -> bool + Any + 'static + Sync + Send

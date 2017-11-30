@@ -1,8 +1,12 @@
 use common::*;
-use error::Error;
+use failure::Error;
 use openssl::rand;
 use openssl::rsa::{Rsa, PKCS1_PADDING};
 use openssl::symm::{self, Cipher};
+
+#[derive(Debug, Fail)]
+#[fail(display = "Input is too small")]
+pub struct OutOfBounds;
 
 /// Encrypt `input` with `rsa` instance.
 /// The difference between just encrypting it normally
@@ -42,14 +46,14 @@ pub fn encrypt(input: &[u8], rsa: &Rsa) -> Result<Vec<u8>, Error> {
 /// following the standard synac format.
 pub fn decrypt(mut input: &[u8], rsa: &Rsa) -> Result<Vec<u8>, Error> {
     if input.len() <= 4 {
-        return Err(Error::OutOfBounds);
+        return Err(OutOfBounds.into());
     }
 
     let size_rsa = decode_u16(&input[..2]) as usize;
     let size_aes = decode_u16(&input[2..4]) as usize;
 
     if input.len() != 4+size_rsa+size_aes {
-        return Err(Error::OutOfBounds);
+        return Err(OutOfBounds.into());
     }
     input = &input[4..];
 

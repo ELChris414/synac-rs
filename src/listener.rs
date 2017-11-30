@@ -1,5 +1,5 @@
 use common::{self, Packet};
-use error::Error;
+use failure::Error;
 use std::io::{ErrorKind as IoErrorKind, Read};
 
 pub struct Listener {
