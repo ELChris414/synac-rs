@@ -1,7 +1,7 @@
 use common::*;
 use std::collections::HashMap;
 
-/// Holds track of stuff synac has sent locally.
+/// A struct that remembers stuff previous packets have informed about
 pub struct State {
     pub channels: HashMap<usize, Channel>,
     pub groups:   HashMap<usize, Group>,

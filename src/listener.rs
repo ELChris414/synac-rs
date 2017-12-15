@@ -2,6 +2,7 @@ use common::{self, Packet};
 use failure::Error;
 use std::io::{ErrorKind as IoErrorKind, Read};
 
+/// A non-blocking listener
 pub struct Listener {
     size: bool,
     buf:  Vec<u8>,

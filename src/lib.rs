@@ -7,8 +7,11 @@ extern crate rmp_serde as rmps;
 // End
 
 pub mod common;
+/// End-to-end encrypter for synac
 pub mod encrypter;
+/// A non-blocking listener
 pub mod listener;
+/// Remembers stuff previous packets have informed about
 pub mod state;
 
 pub use encrypter::*;
