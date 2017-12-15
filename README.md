@@ -1,4 +1,4 @@
-# synac-rs [![Crates.io](https://img.shields.io/crates/v/synac.svg?style=flat-square)]()
+# synac-rs [![Crates.io](https://img.shields.io/crates/v/synac.svg?style=flat-square)](https://crates.io/crates/synac)
 
 A client side library for [synac](https://github.com/jD91mZM2/synac).  
 
