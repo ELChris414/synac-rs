@@ -48,7 +48,6 @@ impl Session {
                         for byte in &digest {
                             digest_string.push_str(&format!("{:02X}", byte));
                         }
-                        use std::ascii::AsciiExt;
                         return hash.trim().eq_ignore_ascii_case(&digest_string);
                     }
                 }
@@ -64,7 +63,7 @@ impl Session {
             F: Fn(bool, &X509StoreContextRef) -> bool + Any + 'static + Sync + Send
     {
         let mut config = SslConnectorBuilder::new(SslMethod::tls())?;
-        config.builder_mut().set_verify_callback(SSL_VERIFY_PEER, callback);
+        config.set_verify_callback(SSL_VERIFY_PEER, callback);
         let connector = config.build();
 
         let stream = TcpStream::connect(addr)?;
