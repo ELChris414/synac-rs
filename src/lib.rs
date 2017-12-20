@@ -48,6 +48,7 @@ impl Session {
                         for byte in &digest {
                             digest_string.push_str(&format!("{:02X}", byte));
                         }
+                        use std::ascii::AsciiExt;
                         return hash.trim().eq_ignore_ascii_case(&digest_string);
                     }
                 }
