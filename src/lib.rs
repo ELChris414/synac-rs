@@ -118,3 +118,12 @@ connector.danger_connect_without_providing_domain_for_certificate_verification_a
         Ok(common::read(&mut self.stream)?)
     }
 }
+
+/// Get the permission score for a user in a channel.
+pub fn get_perm(channel: &common::Channel, user: &common::User) -> u8 {
+    if user.bot {
+        user.modes.get(&channel.id).cloned().unwrap_or(channel.default_mode_bot)
+    } else {
+        user.modes.get(&channel.id).cloned().unwrap_or(channel.default_mode_user)
+    }
+}
