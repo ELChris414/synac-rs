@@ -119,11 +119,17 @@ connector.danger_connect_without_providing_domain_for_certificate_verification_a
     }
 }
 
-/// Get the permission score for a user in a channel.
-pub fn get_perm(channel: &common::Channel, user: &common::User) -> u8 {
+/// Get the mode bitmask for a user in a channel
+pub fn get_mode(channel: &common::Channel, user: &common::User) -> u8 {
     if user.bot {
         user.modes.get(&channel.id).cloned().unwrap_or(channel.default_mode_bot)
     } else {
         user.modes.get(&channel.id).cloned().unwrap_or(channel.default_mode_user)
     }
+}
+
+/// Old and badly named function
+#[deprecated(since="0.3.1", note="this is a badly named function. it's renamed to get_mode")]
+pub fn get_perm(channel: &common::Channel, user: &common::User) -> u8 {
+    get_mode(channel, user)
 }
