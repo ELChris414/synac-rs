@@ -57,7 +57,6 @@ impl State {
     pub fn get_recipient_unchecked(&self, channel_id: usize) -> Option<&User> {
         self.users.values()
             .find(|user| (**user).modes.keys()
-                .find(|channel| **channel == channel_id)
-                .is_some())
+                .any(|channel| *channel == channel_id))
     }
 }
