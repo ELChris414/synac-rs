@@ -6,15 +6,13 @@ extern crate rmp_serde as rmps;
 #[macro_use] extern crate serde_derive;
 // End
 
+/// Files shared by both the client and server
 pub mod common;
-/// End-to-end encrypter for synac
-pub mod encrypter;
 /// A non-blocking listener
 pub mod listener;
 /// Remembers stuff previous packets have informed about
 pub mod state;
 
-pub use encrypter::*;
 pub use listener::*;
 pub use state::*;
 
@@ -126,10 +124,4 @@ pub fn get_mode(channel: &common::Channel, user: &common::User) -> u8 {
     } else {
         user.modes.get(&channel.id).cloned().unwrap_or(channel.default_mode_user)
     }
-}
-
-/// Old and badly named function
-#[deprecated(since="0.3.1", note="this is a badly named function. it's renamed to get_mode")]
-pub fn get_perm(channel: &common::Channel, user: &common::User) -> u8 {
-    get_mode(channel, user)
 }
