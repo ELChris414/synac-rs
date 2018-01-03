@@ -45,18 +45,19 @@ impl State {
     }
 
     /// Search for the recipient in a private channel
-    pub fn get_recipient(&self, channel: &Channel) -> Option<&User> {
+    pub fn get_recipient(&self, channel: &Channel, me: usize) -> Option<&User> {
         if channel.private { return None; }
-        self.get_recipient_unchecked(channel.id)
+        self.get_recipient_unchecked(channel.id, me)
     }
 
     /// Search for the recipient in a private channel.
     /// If the channel isn't private, it returns the first user it can find
     /// that has a special mode in that channel.
     /// So you should probably make sure it's private first.
-    pub fn get_recipient_unchecked(&self, channel_id: usize) -> Option<&User> {
+    pub fn get_recipient_unchecked(&self, channel_id: usize, me: usize) -> Option<&User> {
         self.users.values()
-            .find(|user| (**user).modes.keys()
+            .find(|user| user.id != me &&
+                (**user).modes.keys()
                 .any(|channel| *channel == channel_id))
     }
 }
