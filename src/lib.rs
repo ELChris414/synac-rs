@@ -28,11 +28,6 @@ pub struct Session {
     stream: SslStream<TcpStream>
 }
 
-impl Drop for Session {
-    fn drop(&mut self) {
-        let _ = self.send(&Packet::Close);
-    }
-}
 impl Session {
     /// Create a synac session that verifies the public key against a hash.
     pub fn new<S: Into<String>, T: ToSocketAddrs>(addr: T, hash: S) -> Result<Session, Error> {
