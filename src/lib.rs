@@ -21,6 +21,7 @@ use failure::Error;
 use openssl::ssl::{SSL_VERIFY_PEER, SslConnectorBuilder, SslMethod, SslStream};
 use openssl::x509::X509StoreContextRef;
 use std::any::Any;
+use std::fmt::Write;
 use std::net::{TcpStream, ToSocketAddrs};
 
 /// A struct that holds the connection to synac.
@@ -39,7 +40,7 @@ impl Session {
                         let digest = openssl::sha::sha256(&pem);
                         let mut digest_string = String::with_capacity(digest.len());
                         for byte in &digest {
-                            digest_string.push_str(&format!("{:02X}", byte));
+                            write!(digest_string, "{:02X}", byte).unwrap();
                         }
                         use std::ascii::AsciiExt;
                         return hash.trim().eq_ignore_ascii_case(&digest_string);
