@@ -18,11 +18,12 @@ pub mod listener;
 /// Remembers stuff previous packets have informed about
 pub mod state;
 
-pub use listener::*;
+#[cfg(not(feature = "tokio"))] pub use listener::*;
 pub use state::*;
 
 #[cfg(feature = "tokio")] use futures::{future, Future};
 #[cfg(feature = "tokio")] use std::net::SocketAddr;
+#[cfg(feature = "tokio")] use std::rc::Rc;
 #[cfg(feature = "tokio")] use tokio_core::net::TcpStream;
 #[cfg(feature = "tokio")] use tokio_core::reactor::Handle;
 #[cfg(feature = "tokio")] use tokio_io::{io, AsyncRead};
@@ -140,7 +141,7 @@ impl Session {
                 };
                 Box::new(config
                     .verify_hostname(false)
-                    .connect_async("", stream)
+                    .connect_async("krake.one", stream)
                     .map_err(Error::from)
                     .map(|stream| {
                         let (reader, writer) = stream.split();
@@ -164,7 +165,6 @@ impl Session {
         self.stream.get_ref().set_nonblocking(value)
     }
 
-    #[cfg(not(feature = "tokio"))]
     /// Sends the login packet with specific password.
     /// Read the result with `read`.
     /// Warning: Strongly disencouraged. Use tokens instead, when possible.
@@ -176,7 +176,6 @@ impl Session {
             token: None
         }))
     }
-    #[cfg(not(feature = "tokio"))]
     /// Sends the login packet with specific token.
     /// Read the result with `read`.
     pub fn login_with_token<S: Into<String>>(&mut self, bot: bool, name: S, token: S) -> Result<(), Error> {
@@ -206,20 +205,21 @@ impl Session {
     }
     #[cfg(feature = "tokio")]
     /// Read a packet from the connection
-    pub fn read(&mut self) -> Result<Packet, Error> {
-        Ok(common::read(self.reader.as_mut().expect("A read loop has been spawned"))?)
-    }
-    #[cfg(feature = "tokio")]
-    /// Read a packet from the connection
-    pub fn read_loop<F: Fn(Packet)>(&mut self, callback: &'static F)
-        -> Box<Future<Item = future::FutureResult<(), ()>, Error = Error>> // TODO: impl Future
+    pub fn read_loop<F: Fn(Packet) + 'static>(&mut self, callback: F)
+        -> Box<Future<Item = (), Error = Error>> // TODO: impl Future
     {
         let reader = self.reader.take().expect("A read loop already exists");
+        let callback = Rc::new(callback);
+
         Box::new(future::loop_fn(reader, move |reader| {
+            let callback = Rc::clone(&callback);
+
             io::read_exact(reader, [0; 2])
                 .map_err(Error::from)
                 .and_then(move |(reader, buf)| {
+                    let callback = Rc::clone(&callback);
                     let size = common::decode_u16(&buf);
+
                     io::read_exact(reader, vec![0; size as usize])
                         .map_err(Error::from)
                         .and_then(move |(reader, buf)| {
