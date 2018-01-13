@@ -10,6 +10,7 @@ fn main() {
     // First packet should be either LoginSuccess or an error
     let result = session.read().unwrap();
     // TODO: Use result
+    println!("{:?}", result);
 
     let mut state = State::new();
     loop {
@@ -17,5 +18,6 @@ fn main() {
         state.update(&packet);
 
         // TODO: Use packet
+        println!("{:?}", packet);
     }
 }

@@ -29,6 +29,6 @@ fn main() {
         state.borrow_mut().update(&packet);
 
         // TODO: Use packet
-        println!("Packet: {:?}", packet);
+        println!("{:?}", packet);
     }).map_err(|_| ())).unwrap();
 }

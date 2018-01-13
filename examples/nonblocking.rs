@@ -12,6 +12,7 @@ fn main() {
     // First packet should be either LoginSuccess or an error
     let result = session.read().unwrap();
     // TODO: Use result
+    println!("{:?}", result);
 
     session.set_nonblocking(true).unwrap();
 
@@ -24,6 +25,7 @@ fn main() {
             state.update(&packet);
 
             // TODO: Use packet
+            println!("{:?}", packet);
         }
 
         thread::sleep(Duration::from_millis(100));

@@ -111,6 +111,7 @@ impl Session {
 
         let stream = TcpStream::connect(addr)?;
         let stream = connector.configure()?
+                        .use_server_name_indication(false)
                         .verify_hostname(false)
                         .connect("", stream)?;
 
@@ -140,8 +141,9 @@ impl Session {
                     Err(err) => return Box::new(future::err(Error::from(err)))
                 };
                 Box::new(config
+                    .use_server_name_indication(false)
                     .verify_hostname(false)
-                    .connect_async("krake.one", stream)
+                    .connect_async("", stream)
                     .map_err(Error::from)
                     .map(|stream| {
                         let (reader, writer) = stream.split();
