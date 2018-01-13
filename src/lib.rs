@@ -12,6 +12,7 @@ extern crate rmp_serde as rmps;
 
 /// Files shared by both the client and server
 pub mod common;
+#[cfg(not(feature = "tokio"))]
 /// A non-blocking listener
 pub mod listener;
 /// Remembers stuff previous packets have informed about
