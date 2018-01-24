@@ -1,9 +1,9 @@
 [package]
-authors = ["jD91mZM2 <me@krake.one>"]
+authors = ["ELChris414 <elchrischar@gmail.com>"]
 description = "Synac client library for Rust"
 license-file = "LICENSE"
 name = "synac"
-repository = "https://github.com/jD91mZM2/synac-rs"
+repository = "https://github.com/ELChris414/synac-rs"
 version = "0.6.1"
 [dependencies]
 failure = "0.1.1"
